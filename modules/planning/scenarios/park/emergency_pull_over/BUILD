@@ -3,14 +3,16 @@ load("//tools:cpplint.bzl", "cpplint")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "pull_over_emergency_scenario",
+    name = "emergency_pull_over_scenario",
     srcs = [
-        "pull_over_emergency_scenario.cc",
+        "emergency_pull_over_scenario.cc",
         "stage_approach.cc",
+        "stage_standby.cc",
     ],
     hdrs = [
-        "pull_over_emergency_scenario.h",
+        "emergency_pull_over_scenario.h",
         "stage_approach.h",
+        "stage_standby.h",
     ],
     copts = ["-DMODULE_NAME=\\\"planning\\\""],
     deps = [
@@ -29,16 +31,16 @@ cc_library(
 )
 
 cc_test(
-    name = "pull_over_emergency_scenario_test",
+    name = "emergency_pull_over_scenario_test",
     size = "small",
     srcs = [
-        "pull_over_emergency_scenario_test.cc",
+        "emergency_pull_over_scenario_test.cc",
     ],
     data = [
         "//modules/planning:planning_conf",
     ],
     deps = [
-        ":pull_over_emergency_scenario",
+        ":emergency_pull_over_scenario",
         "@gtest//:main",
     ],
 )
@@ -53,7 +55,7 @@ cc_test(
         "//modules/planning:planning_conf",
     ],
     deps = [
-        ":pull_over_emergency_scenario",
+        ":emergency_pull_over_scenario",
         "@gtest//:main",
     ],
 )

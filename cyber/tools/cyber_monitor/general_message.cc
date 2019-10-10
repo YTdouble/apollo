@@ -135,24 +135,29 @@ void GeneralMessage::Render(const Screen* s, int key) {
           case 'n':
           case 'N':
             ++itemIndex_;
-            if (itemIndex_ >= size) itemIndex_ = 0;
+            if (itemIndex_ >= size) {
+              itemIndex_ = 0;
+            }
             break;
 
           case 'm':
           case 'M':
             --itemIndex_;
-            if (itemIndex_ < 0) itemIndex_ = size - 1;
+            if (itemIndex_ < 0) {
+              itemIndex_ = size - 1;
+            }
             break;
 
-          default: {
-          }
+          default: {}
         }
       }
 
       int lcount = lineCountOfField(*message_ptr_, s->Width(), field_,
                                     reflection_ptr_, is_folded_);
       page_item_count_ = s->Height() - lineNo - 8;
-      if (page_item_count_ < 1) page_item_count_ = 1;
+      if (page_item_count_ < 1) {
+        page_item_count_ = 1;
+      }
       pages_ = lcount / page_item_count_ + 1;
       SplitPages(key);
       int jumpLines = page_index_ * page_item_count_;

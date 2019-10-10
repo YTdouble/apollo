@@ -18,7 +18,7 @@
  * @file
  **/
 
-#include "modules/planning/scenarios/park/pull_over_emergency/stage_approach.h"
+#include "modules/planning/scenarios/park/emergency_pull_over/stage_approach.h"
 
 #include <string>
 #include <vector>
@@ -34,15 +34,15 @@
 namespace apollo {
 namespace planning {
 namespace scenario {
-namespace pull_over_emergency {
+namespace emergency_pull_over {
 
 using apollo::common::TrajectoryPoint;
 
-PullOverEmergencyStageApproach::PullOverEmergencyStageApproach(
+EmergencyPullOverStageApproach::EmergencyPullOverStageApproach(
     const ScenarioConfig::StageConfig& config)
     : Stage(config) {}
 
-Stage::StageStatus PullOverEmergencyStageApproach::Process(
+Stage::StageStatus EmergencyPullOverStageApproach::Process(
     const TrajectoryPoint& planning_init_point, Frame* frame) {
   ADEBUG << "stage: Approach";
   CHECK_NOTNULL(frame);
@@ -51,7 +51,7 @@ Stage::StageStatus PullOverEmergencyStageApproach::Process(
 
   bool plan_ok = ExecuteTaskOnReferenceLine(planning_init_point, frame);
   if (!plan_ok) {
-    AERROR << "PullOverEmergencyStageApproach planning error";
+    AERROR << "EmergencyPullOverStageApproach planning error";
   }
 
   auto& reference_line_info = frame->mutable_reference_line_info()->front();
@@ -61,23 +61,18 @@ Stage::StageStatus PullOverEmergencyStageApproach::Process(
 
   // TODO(all): to be implemented
   if (1) {
-    return FinishStage(false);
+    return FinishStage();
   }
 
   return StageStatus::RUNNING;
 }
 
-Stage::StageStatus PullOverEmergencyStageApproach::FinishStage(
-    const bool success) {
-  if (success) {
-    return FinishScenario();
-  } else {
-    next_stage_ = ScenarioConfig::PULL_OVER_RETRY_APPROACH_PARKING;
-    return Stage::FINISHED;
-  }
+Stage::StageStatus EmergencyPullOverStageApproach::FinishStage() {
+  next_stage_ = ScenarioConfig::EMERGENCY_PULL_OVER_STANDBY;
+  return Stage::FINISHED;
 }
 
-}  // namespace pull_over_emergency
+}  // namespace emergency_pull_over
 }  // namespace scenario
 }  // namespace planning
 }  // namespace apollo

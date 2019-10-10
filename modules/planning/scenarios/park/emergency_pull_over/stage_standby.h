@@ -14,38 +14,46 @@
  * limitations under the License.
  *****************************************************************************/
 
-#define protected public
-#define private public
-#include "modules/planning/scenarios/park/pull_over_emergency/stage_approach.h"
+/**
+ * @file
+ **/
 
-#include "gtest/gtest.h"
+#pragma once
 
-#include "cyber/common/file.h"
-#include "cyber/common/log.h"
+#include "modules/planning/proto/planning_config.pb.h"
+
+#include "modules/planning/scenarios/park/emergency_pull_over/emergency_pull_over_scenario.h"
+#include "modules/planning/scenarios/stage.h"
 
 namespace apollo {
 namespace planning {
 namespace scenario {
-namespace pull_over_emergency {
+namespace emergency_pull_over {
 
-class StageApproachTest : public ::testing::Test {
+struct EmergencyPullOverContext;
+
+class EmergencyPullOverStageStandby : public Stage {
  public:
-  virtual void SetUp() {
-    config_.set_stage_type(ScenarioConfig::PULL_OVER_EMERGENCY_APPROACH);
+  explicit EmergencyPullOverStageStandby(
+      const ScenarioConfig::StageConfig& config)
+      : Stage(config) {}
+
+ private:
+  Stage::StageStatus Process(const common::TrajectoryPoint& planning_init_point,
+                             Frame* frame) override;
+  EmergencyPullOverContext* GetContext() {
+    return GetContextAs<EmergencyPullOverContext>();
   }
 
- protected:
-  ScenarioConfig::StageConfig config_;
+ private:
+  Stage::StageStatus FinishScenario() override;
+  Stage::StageStatus FinishStage();
+
+ private:
+  ScenarioEmergencyPullOverConfig scenario_config_;
 };
 
-TEST_F(StageApproachTest, Init) {
-  PullOverEmergencyStageApproach pull_over_emergency_stage_approach(config_);
-  EXPECT_EQ(pull_over_emergency_stage_approach.Name(),
-            ScenarioConfig::StageType_Name(
-                ScenarioConfig::PULL_OVER_EMERGENCY_APPROACH));
-}
-
-}  // namespace pull_over_emergency
+}  // namespace emergency_pull_over
 }  // namespace scenario
 }  // namespace planning
 }  // namespace apollo

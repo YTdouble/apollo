@@ -20,37 +20,33 @@
 
 #pragma once
 
-#include "modules/planning/proto/planning_config.pb.h"
+#include <vector>
 
-#include "modules/planning/scenarios/park/pull_over_emergency/pull_over_emergency_scenario.h"
-#include "modules/planning/scenarios/stage.h"
+#include "modules/planning/common/frame.h"
+#include "modules/planning/common/st_graph_data.h"
+#include "modules/planning/proto/decider_config.pb.h"
+#include "modules/planning/proto/planning_config.pb.h"
+#include "modules/planning/proto/st_bounds_decider_config.pb.h"
+#include "modules/planning/tasks/deciders/decider.h"
 
 namespace apollo {
 namespace planning {
-namespace scenario {
-namespace pull_over_emergency {
 
-struct PullOverEmergencyContext;
-
-class PullOverEmergencyStageApproach : public Stage {
+class STBoundsDecider : public Decider {
  public:
-  explicit PullOverEmergencyStageApproach(
-      const ScenarioConfig::StageConfig& config);
-
-  StageStatus Process(const common::TrajectoryPoint& planning_init_point,
-                      Frame* frame) override;
-
-  PullOverEmergencyContext* GetContext() {
-    return Stage::GetContextAs<PullOverEmergencyContext>();
-  }
-
-  Stage::StageStatus FinishStage(const bool success);
+  explicit STBoundsDecider(const TaskConfig& config);
 
  private:
-  ScenarioPullOverEmergencyConfig scenario_config_;
+  common::Status Process(Frame* const frame,
+                         ReferenceLineInfo* const reference_line_info) override;
+
+  void RecordSTGraphDebug(
+      const std::vector<STBoundary>& st_graph_data,
+      planning_internal::STGraphDebug* const st_graph_debug);
+
+ private:
+  STBoundsDeciderConfig st_bounds_config_;
 };
 
-}  // namespace pull_over_emergency
-}  // namespace scenario
 }  // namespace planning
 }  // namespace apollo

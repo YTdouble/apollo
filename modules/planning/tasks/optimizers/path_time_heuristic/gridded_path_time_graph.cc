@@ -134,7 +134,7 @@ Status GriddedPathTimeGraph::Search(SpeedData* const speed_data) {
 
 Status GriddedPathTimeGraph::InitCostTable() {
   // Time dimension is homogeneous while Spatial dimension has two resolutions,
-  // dense and sparse with dense resolution comeing first in the spatial horizon
+  // dense and sparse with dense resolution coming first in the spatial horizon
   dimension_t_ = static_cast<uint32_t>(std::ceil(
                      total_length_t_ / static_cast<double>(unit_t_))) +
                  1;
@@ -359,14 +359,15 @@ void GriddedPathTimeGraph::CalculateCostAt(
       // Use v0 = (pre_point.s - prepre_point.s) / unit_t as velocity estimate
       // in acc estimate as 2.0 * (delta_s - v0*unit_t) / (unit_t*unit_t)
       const double curr_a =
-          2.0 * (cost_cr.point().s() + pre_col[r_pre].pre_point()->point().s() -
-                 2 * pre_col[r_pre].point().s()) /
+          2.0 *
+          (cost_cr.point().s() + pre_col[r_pre].pre_point()->point().s() -
+           2 * pre_col[r_pre].point().s()) /
           (unit_t_ * unit_t_);
       if (curr_a < gridded_path_time_graph_config_.max_deceleration() ||
           curr_a > gridded_path_time_graph_config_.max_acceleration()) {
         continue;
       }
-      // Filter out continous-time node connection which is in collision with
+      // Filter out continuous-time node connection which is in collision with
       // obstacle
       if (CheckOverlapOnDpStGraph(st_graph_data_.st_boundaries(), cost_cr,
                                   pre_col[r_pre])) {
@@ -394,8 +395,9 @@ void GriddedPathTimeGraph::CalculateCostAt(
       continue;
     }
     const double curr_a =
-        2.0 * (cost_cr.point().s() + pre_col[r_pre].pre_point()->point().s() -
-               2 * pre_col[r_pre].point().s()) /
+        2.0 *
+        (cost_cr.point().s() + pre_col[r_pre].pre_point()->point().s() -
+         2 * pre_col[r_pre].point().s()) /
         (unit_t_ * unit_t_);
     if (curr_a > vehicle_param_.max_acceleration() ||
         curr_a < vehicle_param_.max_deceleration()) {
